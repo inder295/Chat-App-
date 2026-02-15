@@ -6,8 +6,6 @@ const messageRouter=express.Router();
 
 messageRouter.get("/users",protectRoute,getUserForSidebar);
 messageRouter.get('/:id',protectRoute,getMessages)
-messageRouter.get("/send/:id",protectRoute,sentMessage)
-
-
+messageRouter.post("/send/:id",protectRoute,sentMessage)
 
 export default messageRouter;
