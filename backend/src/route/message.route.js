@@ -1,9 +1,12 @@
 import express from "express"
-import { getUserForSidebar } from "../cantroller/message.canroller.js";
+import { getUserForSidebar,getMessages, sentMessage } from "../cantroller/message.canroller.js";
+import { protectRoute } from "../middleware/auth.middleware.js";
 
 const messageRouter=express.Router();
 
-messageRouter.get("/users",getUserForSidebar)
+messageRouter.get("/users",protectRoute,getUserForSidebar);
+messageRouter.get('/:id',protectRoute,getMessages)
+messageRouter.get("/send/:id",protectRoute,sentMessage)
 
 
 
