@@ -1,12 +1,50 @@
+import { Navigate, Route, Routes } from "react-router-dom"
+import Navbar from "./components/Navbar"
+import Home from "./components/Home"
+import Singup from "./components/Singup"
+import Signin from "./components/Signin"
+import Profile from "./components/Profile"
+import Settings from "./components/Settings"
+import { useAuth } from "./store/useAuth"
+import { useEffect } from "react"
+import { Loader } from "lucide-react"
 
 
 function App() {
 
+  const {authUser,checkAuth,isCheckingAuth}=useAuth();
+
+  useEffect(()=>{
+      checkAuth();
+  },[checkAuth])
+  
+
+  console.log({authUser});
+
+  if(isCheckingAuth && !authUser){
+    return <>
+       <div className="flex justify-center items-center h-screen">
+          <Loader className="size-10 animate-spin"/>
+       </div>
+    </>
+  }
+  
+
   return (
     <>
-     <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+      <Navbar/>
+
+      <Routes>
+         <Route path="/" element={authUser? <Home/> : <Navigate to="/signin" />} />
+         <Route path="/signup" element={!authUser?  <Singup/> : <Navigate to="/"/> } />
+         <Route path="/signin" element={!authUser?<Signin/> : <Navigate to="/"/> } />
+         <Route path="/profile" element={authUser? <Profile/> : <Navigate to="/signin" />} />
+         <Route path="/settings" element={ <Settings/> } />
+           
+
+        
+
+      </Routes>
 
       
       
