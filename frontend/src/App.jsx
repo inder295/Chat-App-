@@ -8,6 +8,7 @@ import Settings from "./components/Settings"
 import { useAuth } from "./store/useAuth"
 import { useEffect } from "react"
 import { Loader } from "lucide-react"
+import { ToastContainer } from "react-toastify"
 
 
 function App() {
@@ -18,8 +19,6 @@ function App() {
       checkAuth();
   },[checkAuth])
   
-
-  console.log({authUser});
 
   if(isCheckingAuth && !authUser){
     return <>
@@ -45,6 +44,8 @@ function App() {
         
 
       </Routes>
+
+      <ToastContainer/>
 
       
       

@@ -1,10 +1,11 @@
 
-import { UserKey } from 'lucide-react';
+import { Loader,UserKey } from 'lucide-react';
 import signupImage from "../../public/diljit-signup-copnvert image.webp"
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { signupSchema } from '../lib/schema';
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from '../store/useAuth';
 
 const Singup = () => {
 
@@ -12,9 +13,12 @@ const Singup = () => {
     resolver:zodResolver(signupSchema)
   })
 
-  const onSubmit=(data)=>{
+  const {isSigningUp,signup}=useAuth();
 
-    console.log(data);
+  const onSubmit=async (data)=>{
+  console.log(data);
+  
+    await signup(data);
     
   }
 
@@ -49,7 +53,9 @@ const Singup = () => {
                         <p className='text-red-500 text-sm'>{errors.password.message}</p>
                      )}
 
-                     <button type='submit' className='mt-4 bg-amber-200 w-full p-2  rounded-sm hover:bg-amber-400'>Submit</button>
+                     <button type='submit' disabled={isSigningUp} className='mt-4 bg-amber-200 w-full p-2  rounded-sm hover:bg-amber-400'>{isSigningUp ? <span className='flex justify-center  '>
+                        <p className='px-2'>Signuping </p> <Loader className='animate-spin '/>
+                     </span> : "Submit"}</button>
 
                      <p className='text-sm text-gray-400 text-center p-2 '>Already have an Account
                         <span className="px-1 hover:cursor-pointer hover:text-black  underline underline-offset-1">
