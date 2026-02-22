@@ -12,9 +12,9 @@ const Navbar = () => {
         await logout();
     }
   return (
-    <div className="h-4 fixed w-full font-serif shadow-2xl">
+    <div className="h-4 w-full top-0 left-0 font-serif shadow-2xl sticky mb-10 z-100">
 
-        <div className=" bg-amber-100  p-3 flex justify-between px-20  ">
+        <div className=" bg-gray-50  p-3 flex justify-between px-20 shadow-lg  ">
             <label className="flex gap-2 cursor-pointer">
                  <span><MessageCircle /></span>
                  <span className="text-lg font-bold">Chat</span>
