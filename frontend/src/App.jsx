@@ -44,11 +44,14 @@ function App() {
         
 
       </Routes>
-
-      <ToastContainer/>
-
-      
-      
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable/>
+    
     </>
   )
 }
