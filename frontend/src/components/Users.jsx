@@ -11,7 +11,7 @@ export const Users = () => {
     const fetchingUsers = useMessage(state => state.fetchingUsers);
     const users = useMessage(state => state.users);
     const setSelectedUser = useMessage(state => state.setSelectedUser);
-  
+    const getMessages=useMessage(state=>state.getMessages);
     
     useEffect(() => {
        getUsersData();
@@ -19,6 +19,7 @@ export const Users = () => {
 
     function handleSelectedUser(user) {
         setSelectedUser(user);
+        getMessages(user._id);
     }
 
     
