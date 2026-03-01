@@ -15,6 +15,11 @@ export const MessageSender = () => {
 
   async function handleSubmit(e){
     e.preventDefault();      
+   
+    if(formData.text.trim()==="" && !formData.image){
+      return;
+    }
+
     await sentMessage(selectedUser._id,formData);
     setFormData({text:"",image:null});
   }

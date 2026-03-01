@@ -1,14 +1,18 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-toastify";
+import {io} from "socket.io-client"
 
-export const useAuth=create((set)=>({
+const  BASE_URL="http://localhost:3000"
+
+export const useAuth=create((set,get)=>({
     authUser:null,
     isSigningUp:false,
     isLoggingIn:false,
     isUpdatingProfile:false,
     isCheckingAuth: false,
     isLoggingOut:false,
+    socket:null,
 
 
     checkAuth:async()=>{
@@ -16,6 +20,7 @@ export const useAuth=create((set)=>({
             set({isCheckingAuth:true})
             const res=await axiosInstance.get('/auth/check');
             set({authUser:res.data});
+            get().connectSocket();
         } catch (error) {
             console.log("Error in check auth: ", error.message);
             
@@ -33,7 +38,7 @@ export const useAuth=create((set)=>({
             });
             set({authUser:res.data});
             toast.success(res.data.message)
-
+            get().connectSocket();
 
         } catch (error) {
 
@@ -53,6 +58,7 @@ export const useAuth=create((set)=>({
            const res=await axiosInstance.post('/auth/logout');
            set({authUser:null});
            toast.success(res.data.message);
+           get().disconnectSocket(); 
 
         } catch (error) {
             console.log(error);
@@ -72,6 +78,7 @@ export const useAuth=create((set)=>({
         });
         set({authUser:res.data});
         toast.success(res.data.message);
+        get().connectSocket();
        } catch (error) {
         console.log(error);
        
@@ -81,6 +88,24 @@ export const useAuth=create((set)=>({
        }finally{
         set({isLoggingIn:false})    
        }
+    },
+
+    connectSocket:()=>{
+
+        const {authUser }=get();
+
+        if(!authUser || get().socket?.connected ){
+            return;
+        }
+       
+        const socket=io(BASE_URL);
+        socket.connect();
+        set({socket:socket});
+    },
+    disconnectSocket:async()=>{
+        if(get().socket?.connected){
+            get().socket.disconnect();
+        }
     }
 
 

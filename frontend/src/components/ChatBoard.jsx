@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import placeholder from "../../public/user-circles-set_78370-4704.avif"
 import { useAuth } from '../store/useAuth'
 import { useMessage } from "../store/useMessages";
@@ -8,8 +9,11 @@ export  const ChatBoard = ({user}) => {
   const {authUser}=useAuth();
   const messages=useMessage((state)=> state.messages);
   const fetchingMessages=useMessage((state)=> state.fetchingMessages);
+  const bottomView=useRef(null);
 
-  
+  useEffect(()=>{
+    bottomView.current?.scrollIntoView({behaviour:"smooth"})
+  },[messages])
   
   return (
     <div className='bg-gray-100 overflow-y-auto h-[calc(100vh-200px)] '>
@@ -47,7 +51,7 @@ export  const ChatBoard = ({user}) => {
     
       
      
-
+    <div ref={bottomView}></div>
 
     </div>
   )
