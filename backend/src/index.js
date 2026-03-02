@@ -5,8 +5,8 @@ import authRouter from "./route/auth.route.js";
 import { db } from "./lib/db.js";
 import messageRouter from "./route/message.route.js"
 import cors from "cors"
+import { app,io,server } from "./lib/socket.js";
 
-const app=express();
 
 dotenv.config();
 
@@ -22,8 +22,18 @@ app.use(cors({
 app.use("/api/auth",authRouter);
 app.use('/api/message',messageRouter);
 
+io.on('connection',(socket)=>{
+    console.log("A user is connected ",socket.id);
 
-app.listen(PORT,()=>{
+    socket.on("disconnect",()=>{
+        console.log("A user is disconnected ",socket.id);
+        
+    })
+    
+})
+
+
+server.listen(PORT,()=>{
     console.log("server is listening on port ",PORT);
     db();
 })   
