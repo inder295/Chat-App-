@@ -9,7 +9,7 @@ export const Users = () => {
 
    
     const getUsersData = useMessage(state => state.getUsersData);
-    const fetchingUsers = useMessage(state => state.fetchingUsers);
+  //  const fetchingUsers = useMessage(state => state.fetchingUsers);
     const users = useMessage(state => state.users);
     const setSelectedUser = useMessage(state => state.setSelectedUser);
     const getMessages=useMessage(state=>state.getMessages);
