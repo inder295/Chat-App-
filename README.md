@@ -2,6 +2,8 @@
 
 A full-stack real-time chat application built using the MERN stack with Socket.io for instant messaging. The app supports private chats, file sharing, message replies, and real-time online user tracking with a scalable backend architecture.
 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/90f716ea-37df-4a83-a569-98521b0835b0" />
+
 ## 🚀 Features
 
 🔐 JWT-based Authentication & Authorization
