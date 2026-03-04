@@ -22,14 +22,25 @@ app.use(cors({
 app.use("/api/auth",authRouter);
 app.use('/api/message',messageRouter);
 
+const onlineUsers={};
+
 io.on('connection',(socket)=>{
     console.log("A user is connected ",socket.id);
 
+    const userId=socket.handshake.query.userId;
+
+    if(userId){
+        onlineUsers[userId]=socket.id;
+        io.emit("getOnlineUsers",Object.keys(onlineUsers));
+    }
+
     socket.on("disconnect",()=>{
         console.log("A user is disconnected ",socket.id);
-        
+        if(userId){
+            delete onlineUsers[userId];
+            io.emit("getOnlineUsers",Object.keys(onlineUsers));
+        }
     })
-    
 })
 
 

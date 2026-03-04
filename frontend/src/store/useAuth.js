@@ -13,6 +13,7 @@ export const useAuth=create((set,get)=>({
     isCheckingAuth: false,
     isLoggingOut:false,
     socket:null,
+    onlineUsers:[],
 
 
     checkAuth:async()=>{
@@ -98,9 +99,21 @@ export const useAuth=create((set,get)=>({
             return;
         }
        
-        const socket=io(BASE_URL);
+        const socket=io(BASE_URL,{
+            query:{
+                userId:authUser._id
+            }
+        });
         socket.connect();
-        set({socket:socket});
+       
+
+        socket.on("getOnlineUsers",(userIds)=>{
+           set({onlineUsers:userIds})
+        })
+
+         set({socket:socket});
+
+
     },
     disconnectSocket:async()=>{
         if(get().socket?.connected){

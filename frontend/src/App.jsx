@@ -13,8 +13,10 @@ import { ToastContainer } from "react-toastify"
 
 function App() {
 
-  const {authUser,checkAuth,isCheckingAuth}=useAuth();
-
+  const {authUser,checkAuth,isCheckingAuth,onlineUsers}=useAuth();
+  
+  console.log(onlineUsers);
+  
   useEffect(()=>{
       checkAuth();
   },[checkAuth])

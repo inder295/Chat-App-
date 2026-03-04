@@ -104,7 +104,8 @@ export const signin=async(req,res)=>{
             message:"Signin successfull",
             fullname:user.fullname,
             email:user.email,
-            profilePic:user.profilePic
+            profilePic:user.profilePic,
+            _id:user._id            
         })
 
 
