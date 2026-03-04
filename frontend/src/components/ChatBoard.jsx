@@ -9,10 +9,16 @@ export  const ChatBoard = ({user}) => {
   const {authUser}=useAuth();
   const messages=useMessage((state)=> state.messages);
   const fetchingMessages=useMessage((state)=> state.fetchingMessages);
+  const {subscribeToMessages,unSubscribeToMessages}=useMessage();
   const bottomView=useRef(null);
 
   useEffect(()=>{
-    bottomView.current?.scrollIntoView({behaviour:"smooth"})
+    subscribeToMessages();
+    return ()=> unSubscribeToMessages();
+  },[messages,subscribeToMessages,unSubscribeToMessages])
+
+  useEffect(()=>{
+     bottomView.current?.scrollIntoView({behaviour:"smooth"});
   },[messages])
   
   return (

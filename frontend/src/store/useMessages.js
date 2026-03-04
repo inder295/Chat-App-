@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "react-toastify";
+import { useAuth } from "./useAuth";
 
 export const useMessage=create((set,get)=>({
     fetchingUsers:false,
@@ -55,6 +56,26 @@ export const useMessage=create((set,get)=>({
            
         }
 
+    },
+    subscribeToMessages:async ()=>{
+      
+        const {selectedUser}=get();
+        if(!selectedUser){
+            return;
+        }
+
+        const socket=useAuth.getState().socket;
+
+        socket.on("newMessage",(newMessage)=>{
+            set({
+                messages:[...get().messages,newMessage]
+            })
+        })
+    },
+
+    unSubscribeToMessages: ()=>{
+        const socket=useAuth.getState().socket;
+        socket.off("newMessage");
     }
 
 }))

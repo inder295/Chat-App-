@@ -22,6 +22,10 @@ app.use(cors({
 app.use("/api/auth",authRouter);
 app.use('/api/message',messageRouter);
 
+export function getReceiverSocketId(userId){
+    return onlineUsers[userId];
+}
+
 const onlineUsers={};
 
 io.on('connection',(socket)=>{
