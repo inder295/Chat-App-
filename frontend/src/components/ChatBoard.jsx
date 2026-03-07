@@ -50,8 +50,11 @@ export  const ChatBoard = ({user}) => {
                    </div>
 
                   </div>
-                  <img src={authUser.profilePic ? authUser.profilePic : placeholder} alt={authUser.fullname} className='h-8 w-8 rounded-full right-0 bottom-0 self-end ' />
-
+                 {
+                  authUser.profilePic ? <img src={authUser.profilePic ? authUser.profilePic : placeholder} alt={authUser.fullname} className='h-8 w-8 rounded-full right-0 bottom-0 self-end ' /> :
+                  <p className='h-8 w-8 rounded-full right-0 bottom-0 self-end bg-blue-300 flex justify-center items-center'>{authUser.fullname.charAt(0).toUpperCase()}</p>
+ 
+                 } 
                 </div>
                 <p className='bg-gray-100 text-sm pr-12 italic text-right '>{new Date(message.createdAt).toLocaleTimeString()}</p>
                 </div>
