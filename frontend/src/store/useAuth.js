@@ -119,6 +119,20 @@ export const useAuth=create((set,get)=>({
         if(get().socket?.connected){
             get().socket.disconnect();
         }
+    },
+
+    updateProfile:async(data)=>{
+        try {
+            set({isUpdatingProfile:true});
+            const res=await axiosInstance.put('/auth/update-profile-pic',data);
+            set({authUser:res.data});
+            toast.success("Profile updated successfully");
+        } catch (error) {
+            console.log("Error in update profile: ", error.message);
+            toast.error(error.response?.data?.message || "Failed to update profile");
+        }finally{
+            set({isUpdatingProfile:false});
+        }
     }
 
 

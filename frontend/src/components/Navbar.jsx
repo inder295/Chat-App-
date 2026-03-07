@@ -1,6 +1,9 @@
 import {MessageCircle} from "lucide-react"
 import { Settings } from 'lucide-react';
 import { GoSignOut } from "react-icons/go";
+import { User } from 'lucide-react';
+import { Home } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from "../store/useAuth";
 
 
@@ -23,10 +26,20 @@ const Navbar = () => {
           
           {
             authUser &&
-                <label className="flex gap-1  cursor-pointer" onClick={handleLogout}>
-                    <span> <GoSignOut className="text-2xl"/> </span>
-                    <span className="text-lg"> Logout </span>
-                </label>
+                <div className="flex gap-4 items-center">
+                    <Link to="/" className="flex gap-1 cursor-pointer hover:text-green-600 transition-colors">
+                        <span> <Home className="text-2xl"/> </span>
+                        <span className="text-lg"> Home </span>
+                    </Link>
+                    <Link to="/profile" className="flex gap-1 cursor-pointer hover:text-blue-600 transition-colors">
+                        <span> <User className="text-2xl"/> </span>
+                        <span className="text-lg"> Profile </span>
+                    </Link>
+                    <label className="flex gap-1 cursor-pointer hover:text-red-600 transition-colors" onClick={handleLogout}>
+                        <span> <GoSignOut className="text-2xl"/> </span>
+                        <span className="text-lg"> Logout </span>
+                    </label>
+                </div>
            }
             
         </div>

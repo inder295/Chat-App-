@@ -1,9 +1,88 @@
+import { useEffect, useState } from "react";
+import { useAuth } from "../store/useAuth";
 
 const Profile = () => {
+ 
+// const link="https://res.cloudinary.com/cloudinary-marketing/images/c_scale,w_auto,dpr_auto/f_auto,q_auto/v1755186035/website_2021/Image-to-Link/Image-to-Link.png?_i=AA";
+
+
+const {authUser}=useAuth();
+
+console.log(authUser);
+
+
+const [formData ,setFormData]=useState({
+  fullname:"",
+  email:"",
+  description:"",
+  profilePic:""
+})
+
+useEffect(()=>{
+  if(authUser){
+    setFormData(authUser);
+
+  }
+},[authUser])
+
+
+const [preview,setPreview]=useState(null);
+
+  
+const handleSubmit=(e)=>{
+  e.preventDefault();
+}
+
+const handleChange=(e)=>{
+   const name=e.target.name;
+   const value=e.target.value;
+   setFormData({...formData,[name]:value})
+}
+
+const handlePreview=(e)=>{
+   const file=e.target.files[0];
+   if(file){
+     const url=URL.createObjectURL(file);
+     setPreview(url);
+   } 
+
+}
+
   return (
     <>
-       <div className='m-40 text-black'> 
-        
+       <div className='max-w-xl mx-auto '>
+          <h1 className="text-3xl font-bold my-10 text-center ">Account Details</h1> 
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="profile-photo"  className="cursor-pointer flex justify-center">
+                {
+                  authUser.profilePic ? <img src={preview? preview: formData.profilePic} alt="" className="h-40 w-40 rounded-full border border-gray-300" value={formData.profilePic} /> : 
+                  
+                  <p className="h-40 w-40 rounded-full border border-gray-300 text-center flex justify-center items-center text-2xl text-bold bg-blue-200 ">{authUser.fullname.charAt(0).toUpperCase()} </p>
+
+                }
+                <input type="file" id="profile-photo" className="hidden" onChange={handlePreview} />
+              </label>
+                 
+             <div htmlFor="Name" className="mx-auto mt-3 ">
+              Fullname 
+                <input type="text" name="fullname" className="border w-full rounded p-2 " value={formData.fullname} onChange={handleChange} />
+
+             </div>
+
+            <div htmlFor="Name" className="mx-auto mt-3 " value={formData.email}>
+              Email 
+                <input type="text" name="email" className="border w-full rounded p-2 bg-gray-200 " readOnly value={formData.email} onChange={handleChange}/>
+
+             </div>
+
+             <div className="mt-3">
+              Description
+              <textarea name="description" className="border w-full rounded p-2" value={formData.description} onChange={handleChange}/>
+             </div>
+
+            <button type="submit" className="w-full p-2 mt-2 rounded bg-blue-500 text-white font-bold hover:bg-blue-400 cursor-pointer">Update</button>
+
+            </form>
        </div>
     
     </>

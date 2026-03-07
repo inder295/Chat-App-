@@ -14,19 +14,19 @@ export const Users = () => {
     const setSelectedUser = useMessage(state => state.setSelectedUser);
     const getMessages=useMessage(state=>state.getMessages);
     const onlineUsers=useAuth(state=>state.onlineUsers)
+
+    const search=useMessage(state=>state.search);
     
     useEffect(() => {
        getUsersData();
-    }, []);
+    }, [getUsersData]);
 
     function handleSelectedUser(user) {
         setSelectedUser(user);
         getMessages(user._id);
     }
 
-    
-   
-    
+    const filteredUsers = users.filter((user) => user.fullname.toLowerCase().includes(search.toLowerCase()));
  
     return (
     <aside className="h-full w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -36,10 +36,15 @@ export const Users = () => {
 
         {
          
-          users.map((user)=>(
+          filteredUsers.map((user)=>(
                     <div key={user._id} className="mx-2 flex cursor-pointer items-center gap-3 rounded-lg p-3 transition hover:bg-slate-100" onClick={() => handleSelectedUser(user)}>
                         <div className="relative h-12 w-12 shrink-0">
-                            <img src={user.profilePic ? user.profilePic : placeholder} alt={user.fullname} className="h-12 w-12 rounded-full p-0.5" />
+                          {
+                            user.profilePic ? <img src={user.profilePic} alt={user.fullname} className="h-12 w-12 rounded-full p-0.5" /> :
+                            
+                            <p className="h-12 w-12 rounded-full p-0.5 bg-blue-200 flex justify-center items-center">{user.fullname.charAt(0).toUpperCase()}</p>
+                            
+                          }  
                         {
                           onlineUsers.includes(user._id)  &&    <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500 shadow-sm"></span>
 

@@ -10,8 +10,12 @@ export const useMessage=create((set,get)=>({
     messages:[],
     fetchingMessages:false,
     sendingMessage:false,
+    search:"",
+
 
     setSelectedUser:((user)=>set({selectedUser:user})),
+
+    setSearchUser:((search)=>set({search:search})),
 
     getUsersData:async()=>{
         try {

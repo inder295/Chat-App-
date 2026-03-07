@@ -140,23 +140,26 @@ export const logout=async(req,res)=>{
 
 export const updateProfile=async(req,res)=>{
     try {
-        const {profilePic}=req.body;
+        const {profilePic, fullname, description}=req.body;
         const userId=req.user._id;
 
-        if(!profilePic){
-            return res.status(400).json({
-                message:"Profile pic required."
-            })
+        const updateData = {};
+
+        if(fullname) updateData.fullname = fullname;
+        if(description) updateData.description = description;
+
+        if(profilePic){
+            const uploadResponse=await cloudinary.uploader.upload(profilePic);
+            updateData.profilePic = uploadResponse.secure_url;
         }
 
-        const uploadResponse=await cloudinary.uploader.upload(profilePic);
-        const updatedUser=await User.findByIdAndUpdate(userId,{profilePic:uploadResponse.secure_url},{new:true});
+        const updatedUser=await User.findByIdAndUpdate(userId, updateData, {new:true});
 
         return res.status(200).json(updatedUser);
 
     } catch (error) {
         return res.status(500).json({
-            message:"Something went wrong.Please try again to upload profile pic.",
+            message:"Something went wrong. Please try again.",
             error:error.message
         })
     }
