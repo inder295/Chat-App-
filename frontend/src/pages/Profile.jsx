@@ -6,7 +6,7 @@ const Profile = () => {
 // const link="https://res.cloudinary.com/cloudinary-marketing/images/c_scale,w_auto,dpr_auto/f_auto,q_auto/v1755186035/website_2021/Image-to-Link/Image-to-Link.png?_i=AA";
 
 
-const {authUser}=useAuth();
+const {authUser, updateProfile}=useAuth();
 
 console.log(authUser);
 
@@ -20,8 +20,12 @@ const [formData ,setFormData]=useState({
 
 useEffect(()=>{
   if(authUser){
-    setFormData(authUser);
-
+    setFormData({
+      fullname: authUser.fullname || "",
+      email: authUser.email || "",
+      description: authUser.description || "",
+      profilePic: authUser.profilePic || ""
+    });
   }
 },[authUser])
 
@@ -29,8 +33,27 @@ useEffect(()=>{
 const [preview,setPreview]=useState(null);
 
   
-const handleSubmit=(e)=>{
+const handleSubmit=async(e)=>{
   e.preventDefault();
+  
+  console.log("Form data before submit:", formData);
+  
+  // Only send fields that have been changed
+  const updateData = {};
+  
+  if(formData.fullname !== authUser.fullname) updateData.fullname = formData.fullname;
+  if(formData.description !== authUser.description) updateData.description = formData.description;
+  if(formData.profilePic && formData.profilePic !== authUser.profilePic) {
+    updateData.profilePic = formData.profilePic;
+  }
+  
+  console.log("Data to update:", updateData);
+  
+  if(Object.keys(updateData).length > 0) {
+    await updateProfile(updateData);
+  } else {
+    console.log("No changes to update");
+  }
 }
 
 const handleChange=(e)=>{
@@ -44,8 +67,14 @@ const handlePreview=(e)=>{
    if(file){
      const url=URL.createObjectURL(file);
      setPreview(url);
+     
+     // Also read the file as base64 for sending to backend
+     const reader = new FileReader();
+     reader.onload = () => {
+       setFormData(prev => ({ ...prev, profilePic: reader.result }));
+     };
+     reader.readAsDataURL(file);
    } 
-
 }
 
   return (
@@ -55,7 +84,7 @@ const handlePreview=(e)=>{
             <form onSubmit={handleSubmit}>
               <label htmlFor="profile-photo"  className="cursor-pointer flex justify-center">
                 {
-                  authUser.profilePic ? <img src={preview? preview: formData.profilePic} alt="" className="h-40 w-40 rounded-full border border-gray-300" value={formData.profilePic} /> : 
+                  authUser.profilePic || preview ? <img src={preview? preview: formData.profilePic} alt="" className="h-40 w-40 rounded-full border border-gray-300" value={formData.profilePic} /> : 
                   
                   <p className="h-40 w-40 rounded-full border border-gray-300 text-center flex justify-center items-center text-2xl text-bold bg-blue-200 ">{authUser.fullname.charAt(0).toUpperCase()} </p>
 
