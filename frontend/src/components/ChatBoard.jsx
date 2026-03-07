@@ -5,12 +5,15 @@ import { useMessage } from "../store/useMessages";
 
 
 export  const ChatBoard = ({user}) => {
+  
+  
 
   const {authUser}=useAuth();
   const messages=useMessage((state)=> state.messages);
   // const fetchingMessages=useMessage((state)=> state.fetchingMessages);
   const {subscribeToMessages,unSubscribeToMessages}=useMessage();
   const bottomView=useRef(null);
+
 
   useEffect(()=>{
     subscribeToMessages();
@@ -20,8 +23,13 @@ export  const ChatBoard = ({user}) => {
   useEffect(()=>{
      bottomView.current?.scrollIntoView({behaviour:"smooth"});
   },[messages])
+
   
   return (
+    <>
+
+
+    
     <div className='bg-gray-100 overflow-y-auto h-[calc(100vh-200px)] '>
 
       { (
@@ -29,8 +37,19 @@ export  const ChatBoard = ({user}) => {
            message.senderId===authUser._id ? (
                <div key={message._id} id="receiver" className='pt-5 px-4 '>
 
-                <div className='flex justify-end gap-2 rounded-xl ' >
-                  <span className='p-2 rounded-xl bg-green-200 mt-5 max-w-lg  '>{message.text}</span> 
+                <div className='flex justify-end gap-2 rounded-xl    ' >
+                  <div className="bg-green-200 p-2 rounded-2xl  ">
+                  {
+                    message.image && 
+                     <img src={message.image} alt="" className="h-60 w-80 p-2 rounded-xl hover:cursor-pointer " />
+                  }
+                  
+                   <div className="max-w-xl   ">
+                      <p className='p-2 rounded-xl  max-w-lg wrap-break-word'>{message.text}</p> 
+
+                   </div>
+
+                  </div>
                   <img src={authUser.profilePic ? authUser.profilePic : placeholder} alt={authUser.fullname} className='h-8 w-8 rounded-full right-0 bottom-0 self-end ' />
 
                 </div>
@@ -41,8 +60,12 @@ export  const ChatBoard = ({user}) => {
                 <div key={message._id} id="sender" className='pt-5 px-2'>
                     <div className='flex gap-2 '>
                         <img src={user.profilePic ? user.profilePic : placeholder} alt={user.fullname} className='h-8 w-8 rounded-full self-end  ' />
-                          <div className=' max-w-lg text-wrap bg-gray-300 rounded-xl p-2 ' >
-                              <span className='my-4 mt-5 '>{message.text}</span> 
+                          <div className=' max-w-lg text-wrap bg-gray-300 rounded-xl p-2  ' >
+                             {
+                                message.image && <img src={message.image} alt="" className="rounded-xl h-60 w-80 pt-1 px-1 " />
+                             }
+                             
+                              <p className='py-2 px-2 wrap-break-word '>{message.text}</p> 
                           </div>
 
                       </div>
@@ -60,6 +83,8 @@ export  const ChatBoard = ({user}) => {
     <div ref={bottomView}></div>
 
     </div>
+    
+    </>
   )
 }
 
