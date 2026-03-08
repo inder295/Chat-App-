@@ -1,0 +1,13 @@
+{
+  "name": "chat-app-",
+  "version": "1.0.0",
+  "description": "A full-stack real-time chat application built using the MERN stack with Socket.io for instant messaging. The app supports private chats, file sharing, message replies, and real-time online user tracking with a scalable backend architecture.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
