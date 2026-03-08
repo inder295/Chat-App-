@@ -29,7 +29,13 @@ export const getMessages=async(req,res)=>{
                 {senderId:myId ,receiverId:userToChatId},
                 {senderId:userToChatId,receiverId:myId}
             ]
-        })
+        }).populate({
+            path: 'replyTo',
+            populate: {
+                path: 'senderId',
+                select: '_id fullname'
+            }
+        }).sort({ createdAt: 1 });
 
         res.status(200).json(messages);
     } catch (error) {
@@ -43,7 +49,7 @@ export const getMessages=async(req,res)=>{
 
 export const sentMessage=async(req,res)=>{
     try {
-        const {text,image}=req.body;
+        const {text,image,replyTo}=req.body;
         const {id:receiverId}=req.params;
         const senderId=req.user._id;
 
@@ -54,23 +60,34 @@ export const sentMessage=async(req,res)=>{
             imageUrl=uploaderResponse.secure_url;
         }
 
+
         const newMessage=new Message({
             senderId,
             receiverId,
             text,
-            image:imageUrl
+            image:imageUrl,
+            replyTo:replyTo || null
         })
 
         await newMessage.save();
 
+        const populatedMessage = await Message.findById(newMessage._id)
+            .populate({
+            path: 'replyTo',
+            populate: {
+                path: 'senderId',
+                select: '_id fullname'
+            }
+        });
+
         const receiverSocketId=getReceiverSocketId(receiverId);
         
         if(receiverSocketId){
-          io.to(receiverSocketId).emit("newMessage", newMessage);
+         io.to(receiverSocketId).emit("newMessage", populatedMessage);
         }
 
         
-        res.status(201).json(newMessage);
+        res.status(201).json(populatedMessage);
 
 
     } catch (error) {

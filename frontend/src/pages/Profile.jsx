@@ -6,7 +6,7 @@ const Profile = () => {
 // const link="https://res.cloudinary.com/cloudinary-marketing/images/c_scale,w_auto,dpr_auto/f_auto,q_auto/v1755186035/website_2021/Image-to-Link/Image-to-Link.png?_i=AA";
 
 
-const {authUser, updateProfile}=useAuth();
+const {authUser, updateProfile,isUpdatingProfile}=useAuth();
 
 console.log(authUser);
 
@@ -109,7 +109,8 @@ const handlePreview=(e)=>{
               <textarea name="description" className="border w-full rounded p-2" value={formData.description} onChange={handleChange}/>
              </div>
 
-            <button type="submit" className="w-full p-2 mt-2 rounded bg-blue-500 text-white font-bold hover:bg-blue-400 cursor-pointer">Update</button>
+            <button type="submit" disabled={isUpdatingProfile} className="w-full p-2 mt-2 rounded bg-blue-500 text-white font-bold hover:bg-blue-400 cursor-pointer">{
+            isUpdatingProfile ? "Updating" : "Update"}</button>
 
             </form>
        </div>

@@ -2,31 +2,44 @@ import { GalleryHorizontal ,SendHorizontal} from 'lucide-react';
 import { useState } from 'react';
 import { useMessage } from '../store/useMessages';
 import {X} from "lucide-react"
+import { useAuth } from '../store/useAuth';
 
 
 export const MessageSender = () => {
 
   const [formData,setFormData]=useState({
     text:"",
-    image:null
+    image:null,
+    replyTo:null,
   });
   const [preview,setPreview]=useState(null);
   
 
   const {sentMessage,sendingMessage}=useMessage();
   const selectedUser=useMessage((state)=>state.selectedUser)
+  const replyPreview=useMessage((state)=>state.replyPreview);
+  const setReplyPreview=useMessage((state)=>state.setReplyPreview);
+  const authUser=useAuth((state)=>state.authUser)
 
   async function handleSubmit(e){
     e.preventDefault();      
-   
+    
     if(formData.text.trim()==="" && !formData.image){
       return;
     }
 
-    await sentMessage(selectedUser._id,formData); 
+    const messageData = {
+      ...formData,
+      replyTo: replyPreview ? replyPreview._id : null
+    };
+
+    console.log(messageData);
     
-    setFormData({text:"",image:null});
+    await sentMessage(selectedUser._id, messageData); 
+    
+    setFormData({text:"",image:null, replyTo: null});
     setPreview(null);
+    setReplyPreview(null); 
   }
 
   function handleChange(e){
@@ -53,10 +66,16 @@ export const MessageSender = () => {
     setFormData(prev => ({...prev, image: null}));
   }
 
+  function removeReplyPreview(){
+     setReplyPreview(null);
+  }
+
 
   return (
 
     <>
+
+
       {preview && 
         <div className='flex'>
 
@@ -64,6 +83,22 @@ export const MessageSender = () => {
              <X className='ml-[-24px] cursor-pointer' onClick={removePreview}/>
         </div>
       }
+  
+  {
+    replyPreview && 
+    <div className='flex justify-between bg-gray-200'>
+      <div className=" p-2 rounded ">
+          <p className='text-green-600'>{replyPreview.senderId===authUser._id ?  
+           authUser.fullname : selectedUser.fullname  }</p>
+          <p className='line-clamp-1'>{replyPreview.text}</p>
+      </div>
+
+      <button className='cursor-pointer mx-4' onClick={()=>{removeReplyPreview()}}>
+        <X />
+      </button>
+      
+    </div>    
+  }
       
       <form className='flex ' onSubmit={handleSubmit}>
         
@@ -83,8 +118,7 @@ export const MessageSender = () => {
                   <SendHorizontal className='w-8 h-6 mr-2  my-5 text-gray-600  cursor-pointer'/>
                 </button>
             </div>
-
-      
+    
       </form>
     </>
   )

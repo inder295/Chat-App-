@@ -37,7 +37,7 @@ io.on('connection',(socket)=>{
     if(userId){
         onlineUsers[userId]=socket.id;
         io.emit("getOnlineUsers",Object.keys(onlineUsers));
-    }
+    } 
 
     socket.on("disconnect",()=>{
         console.log("A user is disconnected ",socket.id);

@@ -11,11 +11,14 @@ export const useMessage=create((set,get)=>({
     fetchingMessages:false,
     sendingMessage:false,
     search:"",
+    replyPreview:null,
 
 
-    setSelectedUser:((user)=>set({selectedUser:user})),
+    setSelectedUser:(user)=>set({selectedUser:user}),
 
-    setSearchUser:((search)=>set({search:search})),
+    setSearchUser:(search)=>set({search:search}),
+
+    setReplyPreview:(data)=> set({replyPreview:data}),
 
     getUsersData:async()=>{
         try {
@@ -70,7 +73,10 @@ export const useMessage=create((set,get)=>({
 
         const socket=useAuth.getState().socket;
 
+        
+
         socket.on("newMessage",(newMessage)=>{
+                
             set({
                 messages:[...get().messages,newMessage]
             })
